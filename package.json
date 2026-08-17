@@ -1,0 +1,17 @@
+{
+  "name": "whoremanh3-www",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "check": "npm run lint && npm test && npm audit --audit-level=high",
+    "lint": "node --check scripts/build.mjs && node --check src/worker.js && node --check src/site.js",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.120.0"
+  }
+}

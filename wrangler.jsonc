@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "whoremanh3-www-preview",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "whoremanh3.com", "custom_domain": true },
+    { "pattern": "www.whoremanh3.com", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "vars": {
+    "CONTACT_DRY_RUN": "false",
+    "CONTACT_FROM": "website@whoremanh3.com",
+    "CONTACT_TO": "ZiON-ON@hotmail.com"
+  }
+}
