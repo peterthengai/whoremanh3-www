@@ -7,7 +7,11 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    if (url.hostname === "whoremanh3.com" && (request.method === "GET" || request.method === "HEAD")) {
+    const isPublicHostname = url.hostname === "whoremanh3.com" || url.hostname === "www.whoremanh3.com";
+    const needsCanonicalRedirect = url.protocol !== "https:" || url.hostname !== "www.whoremanh3.com";
+
+    if (isPublicHostname && needsCanonicalRedirect && (request.method === "GET" || request.method === "HEAD")) {
+      url.protocol = "https:";
       url.hostname = "www.whoremanh3.com";
       return withSecurityHeaders(Response.redirect(url, 301));
     }

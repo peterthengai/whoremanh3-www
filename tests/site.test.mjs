@@ -62,11 +62,22 @@ test("retired paths return 410 without affecting the current events page", async
   assert.equal(current.status, 200);
 });
 
-test("apex requests redirect to the canonical www hostname without losing path or query", async () => {
+test("public URL variants redirect to canonical HTTPS www without losing path or query", async () => {
   const env = { ASSETS: { fetch: async () => new Response("asset", { status: 200 }) } };
-  const response = await worker.fetch(new Request("https://whoremanh3.com/hash-history/?from=apex"), env);
-  assert.equal(response.status, 301);
-  assert.equal(response.headers.get("location"), "https://www.whoremanh3.com/hash-history/?from=apex");
+  const cases = [
+    ["https://whoremanh3.com/hash-history/?from=apex", "https://www.whoremanh3.com/hash-history/?from=apex"],
+    ["http://whoremanh3.com/faq/?from=http-apex", "https://www.whoremanh3.com/faq/?from=http-apex"],
+    ["http://www.whoremanh3.com/events-trails/?from=http-www", "https://www.whoremanh3.com/events-trails/?from=http-www"]
+  ];
+
+  for (const [input, expected] of cases) {
+    const response = await worker.fetch(new Request(input), env);
+    assert.equal(response.status, 301, input);
+    assert.equal(response.headers.get("location"), expected, input);
+  }
+
+  const canonical = await worker.fetch(new Request("https://www.whoremanh3.com/hash-history/"), env);
+  assert.equal(canonical.status, 200);
 });
 
 test("contact endpoint rejects non-POST and incomplete submissions", async () => {
